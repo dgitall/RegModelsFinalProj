@@ -9,12 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction
-
-Analyze the mtcars data set to determine if the use of an automatic
-transmission impacts fuel efficiency, and, if so, by how much.
-
-## Exploratory Analysis
+## Executive Summary
 
 ```{r explore, echo=FALSE}
 
@@ -22,15 +17,24 @@ meanManual <- round(mean(mtcars[mtcars$am==1,]$mpg),1)
 meanAuto <-  round(mean(mtcars[mtcars$am==0,]$mpg),1)
 
 ```
-Plot the fuel efficiency for cars with and without automatic
-transmission (Figure 1). The average fuel efficiency for vehicles with
+The mtcars data set was analyzed to determine if the use of an automatic
+transmission impacts fuel efficiency, and, if so, by how much.
+
+The average fuel-efficiency of cars with manual transmissions is `r meanManual-meanAuto` mpg better than those with automatic transmissions. An ANOVA analysis is performed to determine the best predictors in mtcars to include in a linear regression model. It was found that $cyl$, $hp$, and $wt$ were important to include along with $am$, our predictor of interest. However, the lack of predictive significance for $am$ in the model indicates unmodeled confounding factors that interfere with our attempts to determine the relationship between transmission-type and fuel-efficiency using the mtcars data set. It is likely that manual transmissions have higher fuel efficiency than automatic transmissions, but we need a better data set to properly quantify the difference.  
+  
+Note to reviewers: All code, figures, and tables are included in the Appendix.
+
+## Exploratory Analysis
+
+The distribution of fuel efficiency for cars with and without automatic
+transmission is shown in Figure 1. The average fuel efficiency for vehicles with
 manual transmission is clearly higher than that for the vehicles with
-automatic transmission. The average fuel-efficiency for cars with automatic transmissions is `r meanAuto`. The distribution of mpg for automatic
-transmissions appears compact and roughly normally distributed. The average fuel-efficiency for cars with manual transmissions is `r meanManual`. The distribution of mpg for manual transmissions is dispersed and shows a slight two-lobed form.
+automatic transmission. The average fuel-efficiency for cars with automatic transmissions is `r meanAuto` mpg. The distribution of $mpg$ for automatic
+transmissions appears compact and roughly normally distributed. The average fuel-efficiency for cars with manual transmissions is `r meanManual` mpg. The distribution of $mpg$ for manual transmissions is dispersed and shows a slight two-lobed form.
 
 ## Modeling
 
-Regress on a series of linear models where each model incrementally adds
+A series of linear models are created where each model incrementally adds
 an additional parameter from the mtcars data set. We can compare these
 nested models with ANOVA to determine which terms are necessary to
 include in the model.
@@ -41,7 +45,7 @@ the term added in that model is likely not necessary. The P-values for
 Model 2, Model 4 and Model 6 are below 5%, so we can conclude that the
 following terms are likely necessary to include in our model:
 
--   $am$ -- Transmission type. Must be included.
+-   $am$ -- Transmission type. The predictor of interest.
 -   $cyl$ -- Number of cylinders
 -   $hp$ -- Gross horsepower
 -   $wt$ -- Weight (1000 lbs)
@@ -50,7 +54,7 @@ $$
 mpg_i = \beta_0 + \beta_1*am_i + \beta_2*cyl_i + \beta_3*hp_i + \beta_4*wt_i + \epsilon_i
 $$
 
-The final model looks like a good fit due with an overall P-value that
+The final model is a good fit with an overall P-value that
 is nearly zero (Table 2). Comparing the residuals of the final selected
 model versus a linear model using transmission type (Figure 2) shows a
 decrease in residuals by adding additional predictors further indicating
@@ -71,12 +75,7 @@ indicates the need to include additional predictors in the model
 (cylinders, horsepower, and weight). The more complex model showed no
 significant effect on fuel-efficiency from transmission-type.
 
-What is going on? A Google search indicates significant anecdotal
-evidence that automatic transmissions tend to have decreased
-fuel-efficiency -- supporting the conclusion in the linear model using
-transmission-type as the only predictor.
-
-However, the lack of predictive significance in the complex model
+The lack of predictive significance in the complex model
 indicates unmodeled confounding factors that interfere with our attempts
 to determine the relationship between transmission-type and
 fuel-efficiency using the mtcars data set. A simple change in test
